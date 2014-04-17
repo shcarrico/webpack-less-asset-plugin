@@ -3,8 +3,11 @@ var RawSource = require("webpack/lib/RawSource");
 var less = require('less');
 
 function LessPlugin(options) {
+	options.less.syncImport = true;
 	this.options = options;
 }
+
+module.exports = LessPlugin;
 
 LessPlugin.prototype.apply = function (compiler) {
 	var lessPlugin = this;
@@ -27,7 +30,7 @@ LessPlugin.prototype.apply = function (compiler) {
 					}
 				}, "");
 
-				less.render(lessString, lessPlugin.options , function (e, css) {
+				less.render(lessString, lessPlugin.options.less , function (e, css) {
 					if(e){
 						cb(e);
 					}else{
@@ -40,5 +43,3 @@ LessPlugin.prototype.apply = function (compiler) {
 		});
 	});
 };
-
-module.exports = LessPlugin;
