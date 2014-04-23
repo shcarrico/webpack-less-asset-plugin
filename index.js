@@ -61,6 +61,9 @@ LessPlugin.prototype.apply = function (compiler) {
 		});
 	});
 	compiler.plugin("after-plugins", function() {
-		compiler.chunkTemplate = new ChunkWithStyleTagTemplate(compiler.chunkTemplate);
+		if (lessPlugin.options.insertStyle) {
+			compiler.mainTemplate = new ChunkWithStyleTagTemplate(compiler.mainTemplate);
+			compiler.chunkTemplate = new ChunkWithStyleTagTemplate(compiler.chunkTemplate);
+		}
 	});
 };

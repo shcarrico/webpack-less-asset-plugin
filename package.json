@@ -21,9 +21,11 @@
     "url": "https://github.com/shcarrico/webpack-less-asset-plugin/issues"
   },
   "homepage": "https://github.com/shcarrico/webpack-less-asset-plugin",
+  "peerDependencies": {
+    "webpack": "^1.1.7"
+  },
   "dependencies": {
     "less": "^1.7.0",
-    "webpack": "^1.1.7",
     "async": "^0.7.0"
   }
 }

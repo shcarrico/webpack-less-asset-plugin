@@ -10,13 +10,14 @@ ChunkWithStyleTagTemplate.prototype.updateHash = function(hash) {
 	hash.update("2");
 };
 
-ChunkWithStyleTagTemplate.prototype.render = function(chunk, moduleTemplate, dependencyTemplates) {
+ChunkWithStyleTagTemplate.prototype.render = function(chunkA, chunkB) {
+	var chunk = typeof chunkA === "string" ? chunkB : chunkA;
 	var source = new ConcatSource();
 	if (chunk._chunkStyles) {
 		var fnText = insertCss.toString();
 		source.add("(("+fnText+")("+JSON.stringify+"));");
 	}
-	source.add(this.chunkTemplate.render(chunk, moduleTemplate, dependencyTemplates));
+	source.add(this.chunkTemplate.render.apply(this.chunkTemplate, arguments));
 	source.rendered = true;
 	return source;
 };
