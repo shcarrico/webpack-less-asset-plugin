@@ -15,7 +15,7 @@ ChunkWithStyleTagTemplate.prototype.render = function(chunkA, chunkB) {
 	var source = new ConcatSource();
 	if (chunk._chunkStyles) {
 		var fnText = insertCss.toString();
-		source.add("(("+fnText+")("+JSON.stringify+"));");
+		source.add("(("+fnText+")("+JSON.stringify(chunk._chunkStyles)+"));");
 	}
 	source.add(this.chunkTemplate.render.apply(this.chunkTemplate, arguments));
 	source.rendered = true;
