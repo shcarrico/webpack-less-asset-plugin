@@ -1,7 +1,9 @@
-var path = require('path');
+
+var path = require("path");
+var Template = require("webpack/lib/Template");
 var RawSource = require("webpack/lib/RawSource");
 var ChunkWithStyleTagTemplate = require("./ChunkWithStyleTagTemplate");
-var less = require('less');
+var less = require("less");
 var async = require("async");
 
 function LessPlugin(options) {
@@ -10,6 +12,7 @@ function LessPlugin(options) {
 }
 
 module.exports = LessPlugin;
+
 
 LessPlugin.prototype.apply = function (compiler) {
 	var lessPlugin = this;
@@ -49,11 +52,15 @@ LessPlugin.prototype.apply = function (compiler) {
 			}, cb);
 		});
 		compilation.plugin("additional-chunk-assets", function(chunks) {
+
 			chunks.forEach(function(chunk) {
+
 				if (!lessPlugin.options.insertStyle) {
 					var out = (lessPlugin.options.filename || "[name].css")
-							.replace("[name]", chunk.name)
-							.replace("[id]", chunk.id);
+						.replace(/\[name\]/gi, chunk.name)
+						.replace(/\[id\]/gi, chunk.id)
+						.replace(/\[hash(?::(\d+))?\]/gi, withHashLength(compilation.hash))
+						.replace(/\[chunkhash(?::(\d+))?\]/gi, withHashLength(chunk.renderedHash));
 					compilation.assets[out] = new RawSource(chunk._chunkStyles);
 					delete chunk._chunkStyles;
 				}
@@ -67,3 +74,12 @@ LessPlugin.prototype.apply = function (compiler) {
 		}
 	});
 };
+
+// lifted from webpack/lib/TemplatedPathPlugin.js
+function withHashLength(value) {
+	return function (_, hashLength) {
+		var length = hashLength && parseInt(hashLength, 10);
+		return length ? value.slice(0, length) : value;
+	};
+}
+
